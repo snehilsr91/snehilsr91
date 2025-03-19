@@ -24,8 +24,8 @@
 ---
 ### 📊 My Stats  
 <p align="center">
-  <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-410" />
-  <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-25+++" />
+  <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-410+" />
+  <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-25+" />
   <img src="https://img.shields.io/badge/GitHub%20Contributions-30" />
 </p>
 
