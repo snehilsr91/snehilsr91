@@ -18,7 +18,7 @@ print(f"🔍 Debug: LeetCode API Response = {leetcode_response.text}")
 if leetcode_response.status_code == 200:
     try:
         leetcode_data = leetcode_response.json()
-        leetcode_solved = str(leetcode_data.get("totalSolved", "400+"))  # Ensure it's always a string
+        leetcode_solved = leetcode_data.get("totalSolved", "400+")
     except requests.exceptions.JSONDecodeError:
         print("❌ Error: Failed to decode LeetCode API response")
         leetcode_solved = "400+"
@@ -27,15 +27,16 @@ else:
     leetcode_solved = "400+"
 
 # Fetch GitHub Contributions (using events API to count total contributions)
+github_api = f"https://github.com/{github_username}"
 github_events_api = f"https://api.github.com/users/{github_username}/events/public"
 github_response = requests.get(github_events_api)
 
 if github_response.status_code == 200:
     github_events = github_response.json()
-    github_contributions = str(len(github_events))  # Ensure it's a string
+    github_contributions = len(github_events)  # Count all events (approx. contributions)
 else:
     print(f"❌ Error: Failed to fetch GitHub contributions. HTTP Status: {github_response.status_code}")
-    github_contributions = "0"  # Set a proper fallback
+    github_contributions = "N/A"
 
 # Placeholder for GFG (Web scraping required)
 gfg_solved = "25+"
@@ -45,9 +46,9 @@ with open("README.md", "r", encoding="utf-8") as file:
     readme_content = file.read()
 
 # Update stats in README.md
-readme_content = re.sub(r"LeetCode%20Problems%20Solved-\S+", f"LeetCode%20Problems%20Solved-{leetcode_solved}", readme_content)
-readme_content = re.sub(r"GFG%20Problems%20Solved-\S+", f"GFG%20Problems%20Solved-{gfg_solved}", readme_content)
-readme_content = re.sub(r"GitHub%20Contributions-\S+", f"GitHub%20Contributions-{github_contributions}", readme_content)
+readme_content = re.sub(r"LeetCode%20Problems%20Solved-\w+", f"LeetCode%20Problems%20Solved-{leetcode_solved}", readme_content)
+readme_content = re.sub(r"GFG%20Problems%20Solved-\w+", f"GFG%20Problems%20Solved-{gfg_solved}", readme_content)
+readme_content = re.sub(r"GitHub%20Contributions-\w+", f"GitHub%20Contributions-{github_contributions}", readme_content)
 
 # Write back to README.md
 with open("README.md", "w", encoding="utf-8") as file:
