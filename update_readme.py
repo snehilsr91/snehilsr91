@@ -4,7 +4,7 @@ import re
 # Your usernames
 leetcode_username = "snehilsr91"
 github_username = "snehilsr91"
-gfg_username = "snehilsr91"  # Placeholder, needs scraping
+gfg_username = "snehil9i2x"  # Placeholder, needs scraping
 
 # Fetch LeetCode stats
 leetcode_api = f"https://leetcode-stats-api.herokuapp.com/{leetcode_username}"
