@@ -21,10 +21,10 @@ if leetcode_response.status_code == 200:
         leetcode_solved = leetcode_data.get("totalSolved", "N/A")
     except requests.exceptions.JSONDecodeError:
         print("❌ Error: Failed to decode LeetCode API response")
-        leetcode_solved = "N/A"
+        leetcode_solved = "400+"
 else:
     print(f"❌ Error: Failed to fetch LeetCode stats. HTTP Status: {leetcode_response.status_code}")
-    leetcode_solved = "N/A"
+    leetcode_solved = "400+"
 
 # Fetch GitHub Contributions (using public repos as a proxy)
 github_api = f"https://api.github.com/users/{github_username}"
@@ -38,7 +38,7 @@ else:
     github_contributions = "N/A"
 
 # Placeholder for GFG (Web scraping required)
-gfg_solved = "N/A"
+gfg_solved = "25+"
 
 # Read README.md
 with open("README.md", "r", encoding="utf-8") as file:
