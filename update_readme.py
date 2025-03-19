@@ -18,7 +18,7 @@ print(f"🔍 Debug: LeetCode API Response = {leetcode_response.text}")
 if leetcode_response.status_code == 200:
     try:
         leetcode_data = leetcode_response.json()
-        leetcode_solved = leetcode_data.get("totalSolved", "N/A")
+        leetcode_solved = leetcode_data.get("totalSolved", "400+")
     except requests.exceptions.JSONDecodeError:
         print("❌ Error: Failed to decode LeetCode API response")
         leetcode_solved = "400+"
@@ -26,15 +26,16 @@ else:
     print(f"❌ Error: Failed to fetch LeetCode stats. HTTP Status: {leetcode_response.status_code}")
     leetcode_solved = "400+"
 
-# Fetch GitHub Contributions (using public repos as a proxy)
-github_api = f"https://api.github.com/users/{github_username}"
-github_response = requests.get(github_api)
+# Fetch GitHub Contributions (using events API to count total contributions)
+github_api = f"https://github.com/{github_username}"
+github_events_api = f"https://api.github.com/users/{github_username}/events/public"
+github_response = requests.get(github_events_api)
 
 if github_response.status_code == 200:
-    github_data = github_response.json()
-    github_contributions = github_data.get("public_repos", "N/A")  # Approximate contribution count
+    github_events = github_response.json()
+    github_contributions = len(github_events)  # Count all events (approx. contributions)
 else:
-    print(f"❌ Error: Failed to fetch GitHub stats. HTTP Status: {github_response.status_code}")
+    print(f"❌ Error: Failed to fetch GitHub contributions. HTTP Status: {github_response.status_code}")
     github_contributions = "N/A"
 
 # Placeholder for GFG (Web scraping required)
