@@ -24,10 +24,11 @@
 ---
 ### 📊 My Stats  
 <p align="center">
-  <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-410+" />
-  <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-25+" />
-  <img src="https://img.shields.io/badge/GitHub%20Contributions-30" />
+  <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-LOADING-orange?style=for-the-badge&logo=leetcode" />
+  <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-LOADING-brightgreen?style=for-the-badge&logo=geeksforgeeks" />
+  <img src="https://img.shields.io/badge/GitHub%20Contributions-LOADING-blueviolet?style=for-the-badge&logo=github" />
 </p>
+
 
 ---
 
