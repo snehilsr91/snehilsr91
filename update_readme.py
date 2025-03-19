@@ -4,17 +4,38 @@ import re
 # Your usernames
 leetcode_username = "snehilsr91"
 github_username = "snehilsr91"
-gfg_username = "snehil9i2x"  # Placeholder, needs scraping
+gfg_username = "snehilsr91"  # Placeholder for scraping
 
 # Fetch LeetCode stats
 leetcode_api = f"https://leetcode-stats-api.herokuapp.com/{leetcode_username}"
-leetcode_data = requests.get(leetcode_api).json()
-leetcode_solved = leetcode_data.get("totalSolved", "N/A")
+leetcode_response = requests.get(leetcode_api)
+
+# Debugging: Print API response
+print(f"🔍 Debug: LeetCode API Status = {leetcode_response.status_code}")
+print(f"🔍 Debug: LeetCode API Response = {leetcode_response.text}")
+
+# Check if the API returned a valid response
+if leetcode_response.status_code == 200:
+    try:
+        leetcode_data = leetcode_response.json()
+        leetcode_solved = leetcode_data.get("totalSolved", "N/A")
+    except requests.exceptions.JSONDecodeError:
+        print("❌ Error: Failed to decode LeetCode API response")
+        leetcode_solved = "N/A"
+else:
+    print(f"❌ Error: Failed to fetch LeetCode stats. HTTP Status: {leetcode_response.status_code}")
+    leetcode_solved = "N/A"
 
 # Fetch GitHub Contributions (using public repos as a proxy)
 github_api = f"https://api.github.com/users/{github_username}"
-github_data = requests.get(github_api).json()
-github_contributions = github_data.get("public_repos", "N/A")  # Approximate contribution count
+github_response = requests.get(github_api)
+
+if github_response.status_code == 200:
+    github_data = github_response.json()
+    github_contributions = github_data.get("public_repos", "N/A")  # Approximate contribution count
+else:
+    print(f"❌ Error: Failed to fetch GitHub stats. HTTP Status: {github_response.status_code}")
+    github_contributions = "N/A"
 
 # Placeholder for GFG (Web scraping required)
 gfg_solved = "N/A"
@@ -31,3 +52,5 @@ readme_content = re.sub(r"GitHub%20Contributions-\w+", f"GitHub%20Contributions-
 # Write back to README.md
 with open("README.md", "w", encoding="utf-8") as file:
     file.write(readme_content)
+
+print("✅ Successfully updated README.md!")
