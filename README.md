@@ -1,6 +1,6 @@
 <h1 align="center">Hey there, I'm Snehil Singh Rokey! 👋</h1>
 <p align="center">
-  <a href="https://github.com/snehilsr91"><img src="https://img.shields.io/github/followers/SnehilSinghRokey?label=Followers&style=social"></a>
+  <a href="https://github.com/snehilsr91"><img src="https://img.shields.io/github/followers/snehilsr91?label=Followers&style=social"></a>
   <a href="https://leetcode.com/snehilsr91/"><img src="https://img.shields.io/badge/-LeetCode-orange?style=flat-square&logo=leetcode&logoColor=white"></a>
   <a href="https://www.linkedin.com/in/snehil-singh-rokey-b619862a1"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white"></a>
 </p>
