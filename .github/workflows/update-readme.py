@@ -4,7 +4,7 @@ import re
 # Your usernames
 leetcode_username = "snehilsr91"
 github_username = "snehilsr91"
-gfg_username = "snehilsr91"  # Placeholder, GFG API is unofficial
+gfg_username = "snehilsr91"  # Placeholder, needs scraping
 
 # Fetch LeetCode stats
 leetcode_api = f"https://leetcode-stats-api.herokuapp.com/{leetcode_username}"
@@ -16,8 +16,8 @@ github_api = f"https://api.github.com/users/{github_username}"
 github_data = requests.get(github_api).json()
 github_contributions = github_data.get("public_repos", "N/A")  # Approximate contribution count
 
-# Fetch GFG Stats (Needs Scraping or API)
-gfg_solved = "N/A"  # Replace this with actual logic if GFG API is available
+# Placeholder for GFG (Web scraping required)
+gfg_solved = "N/A"
 
 # Read README.md
 with open("README.md", "r", encoding="utf-8") as file:
