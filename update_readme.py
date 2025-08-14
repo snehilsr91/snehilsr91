@@ -12,7 +12,7 @@ MONKEYTYPE_USERNAME = "snehilsr91"
 BOOTDEV_USERNAME = "snehilsr91"
 
 # -------------------
-# FETCH LEETCODE STATS (via session cookie)
+# FETCH LEETCODE STATS
 # -------------------
 leetcode_solved = "N/A"
 try:
@@ -32,10 +32,8 @@ try:
 except Exception as e:
     print("❌ Error fetching LeetCode stats:", e)
 
-print("LeetCode problems solved:", leetcode_solved)
-
 # -------------------
-# FETCH GFG STATS (API)
+# FETCH GFG STATS
 # -------------------
 gfg_solved = "N/A"
 try:
@@ -45,10 +43,8 @@ try:
 except Exception as e:
     print("❌ Error fetching GFG stats:", e)
 
-print("GFG problems solved:", gfg_solved)
-
 # -------------------
-# FETCH MonkeyType WPM (API)
+# FETCH MonkeyType WPM
 # -------------------
 monkey_wpm = "N/A"
 try:
@@ -60,10 +56,8 @@ try:
 except Exception as e:
     print("❌ Error fetching MonkeyType stats:", e)
 
-print("MonkeyType WPM:", monkey_wpm)
-
 # -------------------
-# FETCH Boot.dev level (API)
+# FETCH Boot.dev LEVEL
 # -------------------
 bootdev_level = "N/A"
 try:
@@ -75,34 +69,28 @@ try:
 except Exception as e:
     print("❌ Error fetching Boot.dev stats:", e)
 
-print("Boot.dev level:", bootdev_level)
-
 # -------------------
 # UPDATE README
 # -------------------
 with open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
 
-# Update badges
+# Construct new badges HTML
+badges_html = f"""
+<p align="center">
+  <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-{leetcode_solved}-orange?style=for-the-badge&logo=leetcode" />
+  <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-{gfg_solved}-brightgreen?style=for-the-badge&logo=geeksforgeeks" />
+  <img src="https://img.shields.io/badge/MonkeyType%20WPM-{monkey_wpm}-e2b714?style=for-the-badge&logo=monkeytype" />
+  <img src="https://img.shields.io/badge/Boot.dev%20Level-{bootdev_level}-0a2540?style=for-the-badge&logo=bootdotdev" />
+</p>
+"""
+
+# Replace old badges section between markers
 readme = re.sub(
-    r'(LeetCode%20Problems%20Solved-)[^"\s<]+',
-    rf'\1{leetcode_solved}',
-    readme
-)
-readme = re.sub(
-    r'(GFG%20Problems%20Solved-)[^"\s<]+',
-    rf'\1{gfg_solved}',
-    readme
-)
-readme = re.sub(
-    r'(MonkeyType%20WPM-)[^"\s<]+',
-    rf'\1{monkey_wpm}',
-    readme
-)
-readme = re.sub(
-    r'(Boot\.dev%20Level-)[^"\s<]+',
-    rf'\1{bootdev_level}',
-    readme
+    r'<!-- BADGES_START -->.*<!-- BADGES_END -->',
+    f'<!-- BADGES_START -->{badges_html}<!-- BADGES_END -->',
+    readme,
+    flags=re.DOTALL
 )
 
 with open("README.md", "w", encoding="utf-8") as f:
