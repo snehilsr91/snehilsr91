@@ -1,61 +1,88 @@
+import os
 import requests
-import re
+from datetime import datetime
 
-# Config
-leetcode_username = "snehilsr91"
-github_username = "snehilsr91"
-gfg_solved = "25+"  # Until scraping is added
-github_token = "YOUR_GITHUB_TOKEN"  # For GraphQL contributions API
+LEETCODE_SESSION = os.getenv("LEETCODE_SESSION")
+LEETCODE_CSRF = os.getenv("LEETCODE_CSRF")
+GH_PAT = os.getenv("GH_PAT")  # GitHub token
 
-# Fetch LeetCode stats
-leetcode_api = f"https://leetcode-stats-api.herokuapp.com/{leetcode_username}"
-leetcode_response = requests.get(leetcode_api)
+USERNAME = "snehilsr91"
+REPO_NAME = "snehilsr91"
 
-if leetcode_response.status_code == 200:
+# LeetCode API endpoint
+LEETCODE_GRAPHQL_URL = "https://leetcode.com/graphql"
+
+HEADERS = {
+    "Content-Type": "application/json",
+    "Cookie": f"LEETCODE_SESSION={LEETCODE_SESSION}; csrftoken={LEETCODE_CSRF}",
+    "x-csrftoken": LEETCODE_CSRF,
+    "Referer": "https://leetcode.com",
+}
+
+# GraphQL query to fetch solved problems
+QUERY = {
+    "operationName": "userProfileUserQuestionProgressV2",
+    "variables": {"userSlug": "snehilsr91"}, 
+    "query": """
+        query userProfileUserQuestionProgressV2($userSlug: String!) {
+            userProfileUserQuestionProgressV2(userSlug: $userSlug) {
+                numAcceptedQuestions {
+                    difficulty
+                    count
+                }
+                numFailedQuestions {
+                    difficulty
+                    count
+                }
+                numUntouchedQuestions {
+                    difficulty
+                    count
+                }
+            }
+        }
+    """,
+}
+
+def fetch_leetcode_stats():
     try:
-        leetcode_data = leetcode_response.json()
-        leetcode_solved = str(leetcode_data.get("totalSolved", "400+"))
-    except ValueError:
-        leetcode_solved = "400+"
-else:
-    leetcode_solved = "400+"
+        response = requests.post(LEETCODE_GRAPHQL_URL, json=QUERY, headers=HEADERS)
+        response.raise_for_status()
+        data = response.json()
+        stats = data["data"]["userProfileUserQuestionProgressV2"]["numAcceptedQuestions"]
 
-# Fetch GitHub contributions (GraphQL API)
-headers = {"Authorization": f"Bearer {github_token}"}
-query = f"""
-{{
-  user(login: "{github_username}") {{
-    contributionsCollection {{
-      contributionCalendar {{
-        totalContributions
-      }}
-    }}
-  }}
-}}
-"""
-response = requests.post(
-    "https://api.github.com/graphql",
-    json={"query": query},
-    headers=headers
-)
+        easy = next(item["count"] for item in stats if item["difficulty"] == "EASY")
+        medium = next(item["count"] for item in stats if item["difficulty"] == "MEDIUM")
+        hard = next(item["count"] for item in stats if item["difficulty"] == "HARD")
 
-if response.status_code == 200:
-    data = response.json()
-    github_contributions = str(data["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
-else:
-    github_contributions = "N/A"
+        return easy, medium, hard
+    except Exception as e:
+        print("Error fetching LeetCode stats:", e)
+        return 0, 0, 0
 
-# Read README.md
-with open("README.md", "r", encoding="utf-8") as file:
-    readme_content = file.read()
+def update_readme(easy, medium, hard):
+    try:
+        with open("README.md", "r", encoding="utf-8") as f:
+            content = f.read()
 
-# Replace values (allow + in match)
-readme_content = re.sub(r"LeetCode%20Problems%20Solved-[\d\+]+", f"LeetCode%20Problems%20Solved-{leetcode_solved}", readme_content)
-readme_content = re.sub(r"GFG%20Problems%20Solved-[\d\+]+", f"GFG%20Problems%20Solved-{gfg_solved}", readme_content)
-readme_content = re.sub(r"GitHub%20Contributions-[\d\+]+", f"GitHub%20Contributions-{github_contributions}", readme_content)
+        start_marker = "<!-- LEETCODE:START -->"
+        end_marker = "<!-- LEETCODE:END -->"
 
-# Write README.md
-with open("README.md", "w", encoding="utf-8") as file:
-    file.write(readme_content)
+        new_stats = f"**LeetCode Stats**\n\n✅ Easy: {easy} | 🟠 Medium: {medium} | 🔴 Hard: {hard}\n_Last updated on {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}_"
 
-print("✅ README updated successfully!")
+        if start_marker in content and end_marker in content:
+            before = content.split(start_marker)[0]
+            after = content.split(end_marker)[1]
+            content = f"{before}{start_marker}\n{new_stats}\n{end_marker}{after}"
+        else:
+            content += f"\n{start_marker}\n{new_stats}\n{end_marker}\n"
+
+        with open("README.md", "w", encoding="utf-8") as f:
+            f.write(content)
+
+        print("README.md updated successfully.")
+    except Exception as e:
+        print("Error updating README.md:", e)
+
+if __name__ == "__main__":
+    easy, medium, hard = fetch_leetcode_stats()
+    update_readme(easy, medium, hard)
