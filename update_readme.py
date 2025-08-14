@@ -7,9 +7,9 @@ import requests
 # -------------------
 LEETCODE_SESSION = os.getenv("LEETCODE_SESSION")
 CSRF_TOKEN = os.getenv("LEETCODE_CSRFTOKEN")
-GITHUB_TOKEN = os.getenv("GH_PAT")
-GITHUB_USERNAME = "snehilsr91"
-GFG_USERNAME = "snehilsr91"  # adjust if different
+GFG_USERNAME = "snehilsr91"
+MONKEYTYPE_USERNAME = "snehilsr91"
+BOOTDEV_USERNAME = "snehilsr91"
 
 # -------------------
 # FETCH LEETCODE STATS (via session cookie)
@@ -30,7 +30,9 @@ try:
         total = sum(1 for q in data["stat_status_pairs"] if q["status"] == "ac")
         leetcode_solved = str(total)
 except Exception as e:
-    print("Error fetching LeetCode stats:", e)
+    print("❌ Error fetching LeetCode stats:", e)
+
+print("LeetCode problems solved:", leetcode_solved)
 
 # -------------------
 # FETCH GFG STATS (API)
@@ -38,37 +40,42 @@ except Exception as e:
 gfg_solved = "N/A"
 try:
     res = requests.get(f"https://geeks-for-geeks-stats-api-napiyo.vercel.app/?userName={GFG_USERNAME}")
-    if res.status_code == 200:
+    if res.status_code == 200 and "totalProblemsSolved" in res.json():
         gfg_solved = str(res.json().get("totalProblemsSolved", "N/A"))
 except Exception as e:
-    print("Error fetching GFG stats:", e)
+    print("❌ Error fetching GFG stats:", e)
+
+print("GFG problems solved:", gfg_solved)
 
 # -------------------
-# FETCH GITHUB CONTRIBUTIONS
+# FETCH MonkeyType WPM (API)
 # -------------------
-github_contributions = "N/A"
+monkey_wpm = "N/A"
 try:
-    query = """
-    {
-      user(login: "%s") {
-        contributionsCollection {
-          contributionCalendar {
-            totalContributions
-          }
-        }
-      }
-    }
-    """ % GITHUB_USERNAME
-
-    res = requests.post(
-        "https://api.github.com/graphql",
-        json={"query": query},
-        headers={"Authorization": f"Bearer {GITHUB_TOKEN}"}
-    )
+    res = requests.get(f"https://monkeytype.com/api/users/{MONKEYTYPE_USERNAME}/performance")
     if res.status_code == 200:
-        github_contributions = str(res.json()["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
+        data = res.json()
+        if "average_wpm" in data:
+            monkey_wpm = str(round(data["average_wpm"]))
 except Exception as e:
-    print("Error fetching GitHub contributions:", e)
+    print("❌ Error fetching MonkeyType stats:", e)
+
+print("MonkeyType WPM:", monkey_wpm)
+
+# -------------------
+# FETCH Boot.dev level (API)
+# -------------------
+bootdev_level = "N/A"
+try:
+    res = requests.get(f"https://boot.dev/api/users/{BOOTDEV_USERNAME}/progress")
+    if res.status_code == 200:
+        data = res.json()
+        if "level" in data:
+            bootdev_level = str(data["level"])
+except Exception as e:
+    print("❌ Error fetching Boot.dev stats:", e)
+
+print("Boot.dev level:", bootdev_level)
 
 # -------------------
 # UPDATE README
@@ -76,19 +83,25 @@ except Exception as e:
 with open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
 
+# Update badges
 readme = re.sub(
-    r"(LeetCode%20Problems%20Solved-)[\d\+]+",
-    rf"\1{leetcode_solved}",
+    r'(LeetCode%20Problems%20Solved-)[^"\s<]+',
+    rf'\1{leetcode_solved}',
     readme
 )
 readme = re.sub(
-    r"(GFG%20Problems%20Solved-)[\d\+]+",
-    rf"\1{gfg_solved}",
+    r'(GFG%20Problems%20Solved-)[^"\s<]+',
+    rf'\1{gfg_solved}',
     readme
 )
 readme = re.sub(
-    r"(GitHub%20Contributions-)[\d\+]+",
-    rf"\1{github_contributions}",
+    r'(MonkeyType%20WPM-)[^"\s<]+',
+    rf'\1{monkey_wpm}',
+    readme
+)
+readme = re.sub(
+    r'(Boot\.dev%20Level-)[^"\s<]+',
+    rf'\1{bootdev_level}',
     readme
 )
 
