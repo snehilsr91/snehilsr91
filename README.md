@@ -39,10 +39,3 @@
 ---
 
 ⚡ **Fun Fact:** I solve DSA problems for fun and try to build stuff!!😆
-
-<!-- LEETCODE:START -->
-**LeetCode Stats**
-
-✅ Easy: 211 | 🟠 Medium: 227 | 🔴 Hard: 17
-_Last updated on 2025-08-14 11:12:07 UTC_
-<!-- LEETCODE:END -->
