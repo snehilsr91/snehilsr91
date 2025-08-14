@@ -5,9 +5,6 @@ on:
   schedule:
     - cron: "0 */6 * * *" # every 6 hours
 
-permissions:
-  contents: write
-
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -38,6 +35,7 @@ jobs:
           git commit -m "Update stats" || echo "No changes to commit"
 
       - name: Push changes
-        run: git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
