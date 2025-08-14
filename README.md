@@ -26,7 +26,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/LeetCode%20Problems%20Solved-455-orange?style=for-the-badge&logo=leetcode" />
   <img src="https://img.shields.io/badge/GFG%20Problems%20Solved-28-brightgreen?style=for-the-badge&logo=geeksforgeeks" />
-  <br>
   <img src="https://img.shields.io/badge/MonkeyType%20WPM-98-e2b714?style=for-the-badge&logo=monkeytype" />
   <img src="https://img.shields.io/badge/Boot.dev%20Level-4-0a2540?style=for-the-badge&logo=bootdotdev" />
 </p>
