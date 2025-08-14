@@ -1,34 +1,41 @@
-name: Update README Stats
+name: Update LeetCode Stats
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"  # Runs every 6 hours
   workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *" # runs every 6 hours
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.GH_PAT }}
+          node-version: "20"
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install Dependencies
-        run: pip install requests
-
-      - name: Run Python Script
-        run: python update_readme.py
-
-      - name: Commit and Push Changes
+      - name: Update LeetCode Stats
+        env:
+          LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
+          CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@github.com"
+          node updateStats.js
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git commit -m "Updated stats in README"
-          git push origin main
+          git commit -m "Update LeetCode stats" || echo "No changes to commit"
+
+      - name: Push changes
+        run: |
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
