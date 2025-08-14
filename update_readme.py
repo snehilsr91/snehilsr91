@@ -14,7 +14,7 @@ BOOTDEV_USERNAME = "snehilsr91"
 # -------------------
 # FETCH LEETCODE STATS
 # -------------------
-leetcode_solved = "N/A"
+leetcode_solved = "455"
 try:
     cookies = {
         "LEETCODE_SESSION": LEETCODE_SESSION,
@@ -35,7 +35,7 @@ except Exception as e:
 # -------------------
 # FETCH GFG STATS
 # -------------------
-gfg_solved = "N/A"
+gfg_solved = "28"
 try:
     res = requests.get(f"https://geeks-for-geeks-stats-api-napiyo.vercel.app/?userName={GFG_USERNAME}")
     if res.status_code == 200 and "totalProblemsSolved" in res.json():
@@ -46,7 +46,7 @@ except Exception as e:
 # -------------------
 # FETCH MonkeyType WPM
 # -------------------
-monkey_wpm = "N/A"
+monkey_wpm = "98"
 try:
     res = requests.get(f"https://monkeytype.com/api/users/{MONKEYTYPE_USERNAME}/performance")
     if res.status_code == 200:
@@ -59,7 +59,7 @@ except Exception as e:
 # -------------------
 # FETCH Boot.dev LEVEL
 # -------------------
-bootdev_level = "N/A"
+bootdev_level = "4"
 try:
     res = requests.get(f"https://boot.dev/api/users/{BOOTDEV_USERNAME}/progress")
     if res.status_code == 200:
