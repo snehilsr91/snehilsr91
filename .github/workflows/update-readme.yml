@@ -24,7 +24,7 @@ jobs:
       - name: Update stats in README
         env:
           LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
-          CSRF_TOKEN: ${{ secrets.CSRF_TOKEN }}
+          CSRF_TOKEN: ${{ secrets.LEETCODE_CSRFTOKEN }}
           GH_PAT: ${{ secrets.GH_PAT }}
         run: python update_readme.py
 
