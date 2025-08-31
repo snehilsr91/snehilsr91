@@ -12,27 +12,6 @@ MONKEYTYPE_USERNAME = "snehilsr91"
 BOOTDEV_USERNAME = "snehilsr91"
 
 # -------------------
-# FETCH LEETCODE STATS
-# -------------------
-leetcode_solved = "455"
-try:
-    cookies = {
-        "LEETCODE_SESSION": LEETCODE_SESSION,
-        "csrftoken": CSRF_TOKEN
-    }
-    headers = {
-        "x-csrftoken": CSRF_TOKEN,
-        "referer": "https://leetcode.com",
-    }
-    res = requests.get("https://leetcode.com/api/problems/all/", cookies=cookies, headers=headers)
-    if res.status_code == 200:
-        data = res.json()
-        total = sum(1 for q in data["stat_status_pairs"] if q["status"] == "ac")
-        leetcode_solved = str(total)
-except Exception as e:
-    print("❌ Error fetching LeetCode stats:", e)
-
-# -------------------
 # FETCH GFG STATS
 # -------------------
 gfg_solved = "28"
